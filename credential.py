@@ -4,6 +4,12 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 import base64
 import ast
+from colorama import init as colorama_init
+from colorama import Fore, Back, Style
+colorama_init()
+
+def textc(color, text):
+    return f"{color}{text}{Style.RESET_ALL}"
 
 
 def derive_key(password):
@@ -39,16 +45,16 @@ def add_credential(key, variable, value):
             credit_write = open(credential_path, "wb")
             credit_write.write(encrypted_data)
             credit_write.close()
-            print("updated")
+            print(textc(Fore.LIGHTGREEN_EX, "updated"))
         else:
             encrypted_data = f.encrypt(str({variable: value}).encode())
             credit_write = open(credential_path, "wb")
             credit_write.write(encrypted_data)
             credit_write.close()
-            print("written")
+            print(textc(Fore.LIGHTGREEN_EX, "written"))
 
     except cryptography.fernet.InvalidToken:
-        print("Invalid token, most likely the password is incorrect")
+        print(textc(Fore.LIGHTRED_EX, "Invalid token, most likely the password is incorrect"))
         return
 
 def read_credential(key):
@@ -60,16 +66,17 @@ def read_credential(key):
         if credential:
             decrypted_data = f.decrypt(credential)
             credit_dictionary = ast.literal_eval(decrypted_data.decode())
-            print("-----------------------------------------")
+            print("Credentials: ")
+            print(textc(Fore.GREEN, "■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■"))
             for x in credit_dictionary:
-                print(x + ": " + str(credit_dictionary[x]))
-            print("-----------------------------------------")
+                print(textc(Fore.LIGHTGREEN_EX, x + ": " + str(credit_dictionary[x])))
+            print(textc(Fore.GREEN, "■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■"))
             return True
         else:
-            print("no data")
-            return True
+            print(textc(Fore.YELLOW, "no data"))
+            return "no data"
     except cryptography.fernet.InvalidToken:
-        print("Invalid token, most likely the password is incorrect")
+        print(textc(Fore.LIGHTRED_EX, "Invalid token, most likely the password is incorrect"))
         return False
 
 
@@ -82,9 +89,18 @@ def delete_crendential(key, variable):
         if credential:
             decrypted_data = f.decrypt(credential)
             credit_dictionary = ast.literal_eval(decrypted_data.decode())
-            credit_dictionary.pop(variable)
+            if variable in credit_dictionary:
+                credit_dictionary.pop(variable)
+                encrypted_data = f.encrypt(str(credit_dictionary).encode())
+                credit_write = open(credential_path, "wb")
+                credit_write.write(encrypted_data)
+                credit_write.close()
+                print(textc(Fore.LIGHTGREEN_EX, "updated"))
+            else:
+                print(textc(Fore.YELLOW, "no such item exist"))
+                return True
         else:
-            print("no data")
+            print(textc(Fore.YELLOW, "no data"))
     except cryptography.fernet.InvalidToken:
-        print("Invalid token, most likely the password is incorrect")
-        return
+        print(textc(Fore.LIGHTRED_EX, "Invalid token, most likely the password is incorrect"))
+        return True

@@ -3,7 +3,13 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 import base64
-import os.path
+from colorama import init as colorama_init
+from colorama import Fore, Back, Style
+colorama_init()
+
+def textc(color, text):
+    return f"{color}{text}{Style.RESET_ALL}"
+
 
 def derive_key(password):
     """Derive the key from the `password` using the passed `salt`"""
@@ -39,7 +45,7 @@ def encrypt(filename, key):
     # write the encrypted file
     with open(filename, "wb") as file:
         file.write(encrypted_data)
-    print("successfully encrypted")
+    print(textc(Fore.LIGHTGREEN_EX, "successfully encrypted"))
 
 
 def decrypt(filename, key):
@@ -56,9 +62,9 @@ def decrypt(filename, key):
         print("decrypting....")
         decrypted_data = f.decrypt(encrypted_data)
     except cryptography.fernet.InvalidToken:
-        print("Invalid token, most likely the password is incorrect")
+        print(textc(Fore.LIGHTRED_EX, "Invalid token, most likely the password is incorrect"))
         return
     # write the original file
     with open(filename, "wb") as file:
         file.write(decrypted_data)
-    print("File decrypted successfully")
+    print(textc(Fore.LIGHTGREEN_EX, "File decrypted successfully"))

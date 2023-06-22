@@ -1,96 +1,210 @@
 from encryptor import encrypt, decrypt, generate_key
-from credential import add_credential, read_credential
+from credential import add_credential, read_credential, delete_crendential
 import os.path
+import time
 from colorama import init as colorama_init
-from colorama import Fore
-from colorama import Style
+from colorama import Fore, Back, Style
 colorama_init()
 
+def textc(color, text):
+    return f"{color}{text}{Style.RESET_ALL}"
 
-class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
+def banner():
+    dos_rebel_style = [
+        " ██████████                                                     █████",
+        "░░███░░░░░█                                                    ░░███",
+        " ░███  █ ░  ████████    ██████  ████████  █████ ████ ████████  ███████    ██████  ████████",
+        " ░██████   ░░███░░███  ███░░███░░███░░███░░███ ░███ ░░███░░███░░░███░    ███░░███░░███░░███",
+        " ░███░░█    ░███ ░███ ░███ ░░░  ░███ ░░░  ░███ ░███  ░███ ░███  ░███    ░███ ░███ ░███ ░░░",
+        " ░███ ░   █ ░███ ░███ ░███  ███ ░███      ░███ ░███  ░███ ░███  ░███ ███░███ ░███ ░███",
+        " ██████████ ████ █████░░██████  █████     ░░███████  ░███████   ░░█████ ░░██████  █████",
+        "░░░░░░░░░░ ░░░░ ░░░░░  ░░░░░░  ░░░░░       ░░░░░███  ░███░░░     ░░░░░   ░░░░░░  ░░░░░",
+        "                                           ███ ░███  ░███",
+        "                                          ░░██████   █████",
+        "                                           ░░░░░░   ░░░░░",
+    ]
+
+    ansi_shadow = [
+        "    ███████╗███╗   ██╗ ██████╗██████╗ ██╗   ██╗██████╗ ████████╗ ██████╗ ██████╗",
+        "    ██╔════╝████╗  ██║██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗",
+        "    █████╗  ██╔██╗ ██║██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ██║   ██║██████╔╝",
+        "    ██╔══╝  ██║╚██╗██║██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ██║   ██║██╔══██╗",
+        "    ███████╗██║ ╚████║╚██████╗██║  ██║   ██║   ██║        ██║   ╚██████╔╝██║  ██║",
+        "    ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝    ╚═════╝ ╚═╝  ╚═╝",
+    ]
+
+    alligator_two = [
+        ":::::::::: ::::    :::  ::::::::  :::::::::  :::   ::: ::::::::: ::::::::::: ::::::::  :::::::::  ",
+        ":+:        :+:+:   :+: :+:    :+: :+:    :+: :+:   :+: :+:    :+:    :+:    :+:    :+: :+:    :+: ",
+        "+:+        :+:+:+  +:+ +:+        +:+    +:+  +:+ +:+  +:+    +:+    +:+    +:+    +:+ +:+    +:+ ",
+        "+#++:++#   +#+ +:+ +#+ +#+        +#++:++#:    +#++:   +#++:++#+     +#+    +#+    +:+ +#++:++#:  ",
+        "+#+        +#+  +#+#+# +#+        +#+    +#+    +#+    +#+           +#+    +#+    +#+ +#+    +#+ ",
+        "#+#        #+#   #+#+# #+#    #+# #+#    #+#    #+#    #+#           #+#    #+#    #+# #+#    #+# ",
+        "########## ###    ####  ########  ###    ###    ###    ###           ###     ########  ###    ### ",
+    ]
+
+    my_name = [
+        "   __            ______    __    _ __ __                    _ ",
+        "  / /  __ __    /  _/ /__ / /__ (_) //_/__  __ _  ___  ____(_)",
+        " / _ \/ // /   _/ //  '_//  '_// / ,< / _ \/  ' \/ _ \/ __/ / ",
+        "/_.__/\_, /   /___/_/\_\/_/\_\/_/_/|_|\___/_/_/_/\___/_/ /_/  ",
+        "     /___/                                                    ",
+    ]
+
+    for lines in dos_rebel_style:
+        print(textc(Fore.LIGHTCYAN_EX, lines))
+    for lines in my_name:
+        print(textc(Fore.BLUE, lines))
+
+
+def impossible_error():
+    talking_head = [
+        "        ██╗  ██╗ ██████╗ ██╗    ██╗    ██████╗ ██╗██████╗     ██╗         ",
+        "        ██║  ██║██╔═══██╗██║    ██║    ██╔══██╗██║██╔══██╗    ██║         ",
+        "        ███████║██║   ██║██║ █╗ ██║    ██║  ██║██║██║  ██║    ██║         ",
+        "        ██╔══██║██║   ██║██║███╗██║    ██║  ██║██║██║  ██║    ██║         ",
+        "        ██║  ██║╚██████╔╝╚███╔███╔╝    ██████╔╝██║██████╔╝    ██║         ",
+        "        ╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝     ╚═════╝ ╚═╝╚═════╝     ╚═╝         ",
+        "                                                                          ",
+        " ██████╗ ███████╗████████╗    ██╗  ██╗███████╗██████╗ ███████╗    ██████╗ ",
+        "██╔════╝ ██╔════╝╚══██╔══╝    ██║  ██║██╔════╝██╔══██╗██╔════╝    ╚════██╗",
+        "██║  ███╗█████╗     ██║       ███████║█████╗  ██████╔╝█████╗        ▄███╔╝",
+        "██║   ██║██╔══╝     ██║       ██╔══██║██╔══╝  ██╔══██╗██╔══╝        ▀▀══╝ ",
+        "╚██████╔╝███████╗   ██║       ██║  ██║███████╗██║  ██║███████╗      ██╗   ",
+        " ╚═════╝ ╚══════╝   ╚═╝       ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝      ╚═╝   "
+    ]
+
+    for lines in talking_head:
+        print(textc(Fore.LIGHTRED_EX, lines))
 
 def choice(query, zero, one):
+    """
+    binary choice, return true and false
+    """
     while True:
-        input_data = input(query)
+        input_data = input(textc(Fore.LIGHTWHITE_EX, query))
         if input_data == zero or input_data == one:
             if input_data == zero:
                 return True
+            elif input_data == "back":
+                return "back"
             else:
                 return False
         else:
-            print("answer not match")
+            print(textc(Fore.YELLOW, "answer not match"))
+
+
+def multichoice(query, *choices):
+    """
+    infinite choice length, return the choices
+    """
+    while True:
+        input_data = input(textc(Fore.LIGHTWHITE_EX, query))
+        for cho in choices:
+            if cho == input_data:
+                return input_data
+        else:
+            print(textc(Fore.YELLOW, "answer not match"))
 
 
 def checkfile():
     while True:
-        input_data = input("Path(with extension): ")
+        input_data = input(textc(Fore.LIGHTWHITE_EX, "Path(with extension): "))
         if os.path.isfile(input_data):
             return input_data
         else:
-            print("file not found")
+            print(textc(Fore.YELLOW, "File not found"))
 
 
 def main():
-    print("welcome, this is an encryption program made by me")
-    program_choice = choice("see credentials or encrypt files(credit/encrypt): ", "credit", "encrypt")
+    program_choice = choice("manage credentials or encrypt files(credit/encrypt): ", "credit", "encrypt")
     if program_choice:
         credential_program()
     else:
         encryption_program()
 
-    halt = input("Type 'r' to restart, press anything to exit... ")
+    halt = input(textc(Fore.LIGHTBLUE_EX, "Type 'r' to restart, press anything to exit... "))
     if halt == "r":
         main()
 
 def credential_program():
-    def read():
-        print("Which item you want to change/add?")
-        input_variable = input("Input variable: ")
-        input_value = input("Input value: ")
+    def write():
+        print(textc(Fore.LIGHTWHITE_EX, "Which item you want to add/change?"))
+        input_variable = input(textc(Fore.LIGHTWHITE_EX, "Input variable: "))
+        input_value = input(textc(Fore.LIGHTWHITE_EX, "Input value: "))
         add_credential(password, input_variable, input_value)
-    credit_choice = choice("see credentials or add credentials(see/add): ", "see", "add")
-    if credit_choice:
-        password = input("Input password: ")
-        reading = read_credential(password)
-    else:
-        password = input("Input password: ")
+        read_credential(password)
+    def delete():
+        input_variable = input(textc(Fore.LIGHTWHITE_EX, "what item you want to delete(type 'back' to go back): "))
+        if input_variable == "back":
+            credential_program()
+        deleted = delete_crendential(password, input_variable)
+        if deleted:
+            delete()
+
+    credit_choice = multichoice("see, add/change, or delete credentials(see/add/delete/back(go back)): ", "see", "add", "delete", "back")
+    if credit_choice == "back":
+        main()
+    elif credit_choice == "see":
+        password = input(textc(Fore.LIGHTWHITE_EX, "Input password: "))
+        read_credential(password)
+    elif credit_choice == "add":
+        print(textc(Fore.YELLOW, "(If credentials is empty, input the new password here)"))
+        password = input(textc(Fore.LIGHTWHITE_EX, "Input password: "))
         reading = read_credential(password)
         if reading:
-            read()
-    stop = input("Type 'back' to restart program, otherwise press anything to exit program... ")
+            write()
+    elif credit_choice == "delete":
+        password = input(textc(Fore.LIGHTWHITE_EX, "Input password: "))
+        reading = read_credential(password)
+        if reading and reading != "no data":
+            delete()
+        read_credential(password)
+    else:
+        impossible_error()
+    stop = input(textc(Fore.LIGHTBLUE_EX, "Type 'back' to restart program, otherwise press anything to exit program... "))
     if stop == "back":
         credential_program()
+    else:
+        print("wait...")
+        time.sleep(2)
 
 def encryption_program():
-    crypt_choice = choice("encrypt or decrypt: ", "encrypt", "decrypt")
-    if crypt_choice:
+    crypt_choice = choice("encrypt or decrypt, type 'back' to go back: ", "encrypt", "decrypt")
+    if crypt_choice == "back":
+        main()
+    elif crypt_choice:
         file = checkfile()
-        password = input("Input password: ")
+        password = input(textc(Fore.LIGHTWHITE_EX, "Input password: "))
         key = generate_key(password)
         encrypt(file, key)
     else:
         file = checkfile()
-        password = input("Input password: ")
+        password = input(textc(Fore.LIGHTWHITE_EX, "Input password: "))
         key = generate_key(password)
         decrypt(file, key)
-    stop = input("Type 'back' to restart program, otherwise press anything to exit program... ")
+    stop = input(textc(Fore.LIGHTBLUE_EX, "Type 'back' to restart program, otherwise press anything to exit program... "))
     if stop == "back":
         encryption_program()
+    else:
+        print("wait...")
+        time.sleep(2)
+
 
 if __name__ == "__main__":
-    # main()
-    print(Fore.GREEN + "helo")
-    # print(f"This is {Fore.GREEN}color{Style.RESET_ALL}!")
+    banner()
+    print(textc(Fore.LIGHTBLUE_EX, "Welcome! this is an encryption program made by me(can't help the ascii header it's too good)"))
+    main()
+
+"""
+coloring convention:
+cyan: welcome text
+lime: prompt
+yellow: warning
+red: error
+"""
+
 
 # if __name__ == "__main__":
 #     import argparse
