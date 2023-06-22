@@ -1,9 +1,8 @@
 from encryptor import encrypt, decrypt, generate_key
 from credential import add_credential, read_credential, delete_crendential
 import os.path
-import time
 from colorama import init as colorama_init
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 colorama_init()
 
 def textc(color, text):
