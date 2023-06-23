@@ -1,6 +1,7 @@
 from encryptor import encrypt, decrypt, generate_key
 from credential import add_credential, read_credential, delete_crendential
 import os.path
+import time
 from colorama import init as colorama_init
 from colorama import Fore, Style
 colorama_init()
@@ -134,6 +135,9 @@ def credential_program():
         input_value = input(textc(Fore.LIGHTWHITE_EX, "Input value: "))
         add_credential(password, input_variable, input_value)
         read_credential(password)
+        repeat = input("Type 'y' to write again, press anything else to exit ")
+        if repeat == 'y':
+            write()
     def delete():
         input_variable = input(textc(Fore.LIGHTWHITE_EX, "what item you want to delete(type 'back' to go back): "))
         if input_variable == "back":

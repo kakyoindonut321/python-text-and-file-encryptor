@@ -68,8 +68,8 @@ def read_credential(key):
             credit_dictionary = ast.literal_eval(decrypted_data.decode())
             print("Credentials: ")
             print(textc(Fore.GREEN, "■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■"))
-            for x in credit_dictionary:
-                print(textc(Fore.LIGHTGREEN_EX, x + ": " + str(credit_dictionary[x])))
+            for idx, x in enumerate(credit_dictionary):
+                print(textc(Fore.LIGHTGREEN_EX, f'{idx + 1}. {x}: {str(credit_dictionary[x])}'))
             print(textc(Fore.GREEN, "■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■▬■"))
             return True
         else:

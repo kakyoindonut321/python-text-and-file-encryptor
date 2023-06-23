@@ -1,3 +1,5 @@
-/.idea
+.idea/
 __pycache__/
-/aws.xml
+aws.xml
+bouyancy.txt
+message.txt
