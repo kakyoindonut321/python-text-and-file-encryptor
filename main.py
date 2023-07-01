@@ -2,6 +2,7 @@ from encryptor import encrypt, decrypt, generate_key
 from credential import add_credential, read_credential, delete_crendential
 import os.path
 import time
+import sound
 from colorama import init as colorama_init
 from colorama import Fore, Style
 colorama_init()
@@ -197,6 +198,7 @@ def encryption_program():
 
 if __name__ == "__main__":
     banner()
+    sound.start()
     print(textc(Fore.LIGHTBLUE_EX, "Welcome! this is an encryption program made by me(can't help the ascii header it's too good)"))
     main()
 

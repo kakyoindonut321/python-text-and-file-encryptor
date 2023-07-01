@@ -3,6 +3,7 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 import base64
+import sound
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 colorama_init()
@@ -46,6 +47,7 @@ def encrypt(filename, key):
     with open(filename, "wb") as file:
         file.write(encrypted_data)
     print(textc(Fore.LIGHTGREEN_EX, "successfully encrypted"))
+    sound.success()
 
 
 def decrypt(filename, key):
@@ -68,3 +70,4 @@ def decrypt(filename, key):
     with open(filename, "wb") as file:
         file.write(decrypted_data)
     print(textc(Fore.LIGHTGREEN_EX, "File decrypted successfully"))
+    sound.success()
